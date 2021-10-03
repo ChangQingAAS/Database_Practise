@@ -57,10 +57,10 @@ class Page1(object):
                                                                   column=1,
                                                                   stick=E)
 
-        Button(self.page, text='登录', command=self.login).grid(row=3, column=0)
-        Button(self.page, text='注册', command=self.signup).grid(row=3, column=1)
+        Button(self.page, text='登录', command=self.login,bg='AliceBlue').grid(row=3, column=0)
+        Button(self.page, text='注册', command=self.signup,bg='AliceBlue').grid(row=3, column=1)
 
-        Button(self.page, text='退出', command=self.page.quit).grid(row=3,column=2)
+        Button(self.page, text='退出', command=self.page.quit,bg='AliceBlue').grid(row=3,column=2)
 
     def cancel(self):
         # 清空用户输入的用户名和密码

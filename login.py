@@ -43,7 +43,7 @@ class LoginPage(object):
         self.lab3.bm = bm
         self.lab3.pack()
 
-        self.page = Frame(self.root,bg = 'AliceBlue')  # 创建Frame
+        self.page = Frame(self.root)   
         self.page.pack()
         Label(self.page).grid(row=0, stick=W)
 
@@ -57,10 +57,10 @@ class LoginPage(object):
                                                                   column=1,
                                                                   stick=E)
 
-        Button(self.page, text='登录', command=self.login).grid(row=3, column=0)
-        Button(self.page, text='注册', command=self.signup).grid(row=3, column=1)
+        Button(self.page, text='登录', command=self.login,bg='AliceBlue').grid(row=3, column=0)
+        Button(self.page, text='注册', command=self.signup,bg='AliceBlue').grid(row=3, column=1)
 
-        Button(self.page, text='退出', command=self.page.quit).grid(row=3,column=2)
+        Button(self.page, text='退出', command=self.page.quit,bg='AliceBlue').grid(row=3,column=2)
 
     def cancel(self):
         # 清空用户输入的用户名和密码

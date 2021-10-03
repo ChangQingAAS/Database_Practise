@@ -51,16 +51,16 @@ class choose_window(object):
         self.page = Frame(self.root)
         self.page.pack()
         # 按键设置
-        Button(self.page, text='商品列表', command=self.product).grid(row=9,
+        Button(self.page, text='商品列表', command=self.product,bg='AliceBlue').grid(row=9,
                                                                   column=5,
                                                                   stick=E)
-        Button(self.page, text='我的订单', command=self.orders).grid(row=10,
+        Button(self.page, text='我的订单', command=self.orders,bg='AliceBlue').grid(row=10,
                                                                  column=5,
                                                                  stick=E)
-        Button(self.page, text='我的地址', command=self.address).grid(row=11,
+        Button(self.page, text='我的地址', command=self.address,bg='AliceBlue').grid(row=11,
                                                                   column=5,
                                                                   stick=E)
-        Button(self.page, text='商品评论', command=self.comment).grid(row=12,
+        Button(self.page, text='商品评论', command=self.comment,bg='AliceBlue').grid(row=12,
                                                                   column=5 
                                                                    )
         self.back = tkinter.Button(width=5,
