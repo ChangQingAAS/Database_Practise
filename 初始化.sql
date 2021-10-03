@@ -1,5 +1,5 @@
 drop table if exists type_product, product,consumer,address,orders,product_comments,purchase;
- 
+drop  SEQUENCE if exists orders_id_seq;
 
 -- 创建商品类型表
 CREATE TABLE IF NOT EXISTS  type_product(
@@ -52,14 +52,28 @@ CREATE TABLE IF NOT EXISTS address (
 
 -- 创建订单表
 CREATE TABLE IF NOT EXISTS  orders (
-     order_no           BIGINT   PRIMARY KEY,
+     order_no           serial,
      order_time         DATE,
      user_id            INT REFERENCES consumer(user_id),
      product_id         INT REFERENCES product(product_id),
      status             VARCHAR(10),
      addr_id            INT REFERENCES address(addr_id),
-     total_price        DECIMAL(7,2)
+     total_price        DECIMAL(7,2),
+	 PRIMARY KEY(order_no)
 ) ;
+
+-- --增加自增序列
+-- CREATE SEQUENCE orders_id_seq 
+--     INCREMENT 1 
+--     START 1 
+--     NO MINVALUE 
+--     NO MAXVALUE 
+--     CACHE 2;
+-- --增加键id
+-- alter table orders add column order_no int;
+-- --修改键id为自增序列
+-- alter table orders alter column order_no set default nextval('orders_id_seq');
+
 
 -- 创建商品评论表
 CREATE TABLE IF NOT EXISTS product_comments (
@@ -98,8 +112,14 @@ insert into address (addr_id, receiver, address_detail, region, country, provinc
  
  
 -- 添加订单数据
-insert into orders (order_no, order_time, user_id, product_id, status, addr_id, total_price) VALUES (00001,'2021-09-18',001,01,'状态：未送达',0001,187.46);
+insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2021-09-18',001,01,'状态：未送达',0001,5000);
+insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2000-09-18',001,02,'状态：未送达',0001,6000);
+
 
 -- 创建商品评论数据
 insert into product_comments (release_user, contents, user_level, like_num, reply_num, star, comment_date) VALUES (001,'good',87,77,2,5,'2021-09-08');
- 
+
+
+-- 创建购买记录 
+insert into purchase(user_id, product_id) VALUES (001,01);
+insert into purchase(user_id, product_id) VALUES (001,02);

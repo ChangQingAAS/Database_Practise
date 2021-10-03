@@ -6,6 +6,7 @@ import psycopg2
 import etc
 from signup import *
 from Sql_Search import SqlSearch
+from for_user_id import write_user_id
 
 
 class LoginPage(object):
@@ -21,7 +22,7 @@ class LoginPage(object):
         # 设置窗口初始位置在屏幕居中
         self.root.geometry("%sx%s+%s+%s" % (winWidth, winHeight, x, y))
         # 设置窗口图标
-        self.root.iconbitmap("./my/image/3.ico")
+        self.root.iconbitmap("./image/3.ico")
         # 设置窗口宽高固定
         self.root.resizable(0, 0)
 
@@ -37,7 +38,7 @@ class LoginPage(object):
         3:Frame容器上添加注册控件
         '''
         bm = PhotoImage(
-            file=r'C:\\Users\\admin\\Desktop\\大三上课程\\数据库实践\\my\\image\\1.png')
+            file=r'C:\\Users\\admin\\Desktop\\大三上课程\\数据库实践\\databse_practise\\image\\1.png')
         self.lab3 = Label(self.root, image=bm)
         self.lab3.bm = bm
         self.lab3.pack()
@@ -97,6 +98,7 @@ class LoginPage(object):
             self.lab3.destroy()
             self.page.destroy()
             self.root.user_id = user_id
+            write_user_id(user_id)
             choose.choose_window(self.root)
 
     def signup(self):

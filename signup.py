@@ -23,7 +23,7 @@ class SignupPage(object):
         # 设置窗口初始位置在屏幕居中
         self.root.geometry("%sx%s+%s+%s" % (winWidth, winHeight, x, y))
         # 设置窗口图标
-        self.root.iconbitmap("./my/image/3.ico")
+        self.root.iconbitmap("./image/3.ico")
         # 设置窗口宽高固定
         self.root.resizable(0, 0) 
 

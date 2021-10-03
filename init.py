@@ -7,7 +7,7 @@ def init():
     cursor = conn.cursor()
 
     # 读取sql语句，以进行初始化
-    with open('./my/初始化.sql', 'r',encoding = 'utf-8') as f:
+    with open('./初始化.sql', 'r',encoding = 'utf-8') as f:
         strings = f.read()
 
     try:
