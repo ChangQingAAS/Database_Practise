@@ -43,7 +43,7 @@ class LoginPage(object):
         self.lab3.bm = bm
         self.lab3.pack()
 
-        self.page = Frame(self.root)  # 创建Frame
+        self.page = Frame(self.root,bg = 'AliceBlue')  # 创建Frame
         self.page.pack()
         Label(self.page).grid(row=0, stick=W)
 

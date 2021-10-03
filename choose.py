@@ -51,45 +51,54 @@ class choose_window(object):
         self.page = Frame(self.root)
         self.page.pack()
         # 按键设置
-        Button(self.page, text='  商品列表  ', command=self.product).grid(row=9,
-                                                                column=5,
-                                                                stick=E)
-        Button(self.page, text='  我的订单  ', command=self.orders).grid(row=10,
+        Button(self.page, text='商品列表', command=self.product).grid(row=9,
+                                                                  column=5,
+                                                                  stick=E)
+        Button(self.page, text='我的订单', command=self.orders).grid(row=10,
                                                                  column=5,
                                                                  stick=E)
-        Button(self.page, text='  我的地址  ', command=self.address).grid(row=11,
+        Button(self.page, text='我的地址', command=self.address).grid(row=11,
                                                                   column=5,
                                                                   stick=E)
-        Button(self.page, text='  商品评论  ', command=self.comment).grid(row=12,
-                                                                  column=5,
-                                                                  stick=E)
-        Button(self.page, text=' 后退 ', command=self.goback).grid(
-            row=15,
-            column=10,
-            stick=E
-        )
+        Button(self.page, text='商品评论', command=self.comment).grid(row=12,
+                                                                  column=5 
+                                                                   )
+        self.back = tkinter.Button(width=5,
+                              height=1,
+                              text='后退',
+                              padx=1,
+                              pady=1,
+                              anchor='w',
+                              background='AliceBlue',
+                              command=self.goback)
+        self.back.place(x=650-40, y=400-15, anchor='w')
 
     def product(self):
+        self.back.destroy()
         self.lab3.destroy()
         self.page.destroy()
         all_product(self.root)
 
     def orders(self):
+        self.back.destroy()
         self.lab3.destroy()
         self.page.destroy()
         all_orders(self.root)
 
     def address(self):
+        self.back.destroy()
         self.lab3.destroy()
         self.page.destroy()
         all_address(self.root)
 
     def comment(self):
+        self.back.destroy()
         self.lab3.destroy()
         self.page.destroy()
         all_comment(self.root)
 
     def goback(self):
+        self.back.destroy()
         self.lab3.destroy()
         self.page.destroy()
         login.LoginPage(self.root)
@@ -151,7 +160,7 @@ class all_product(object):
 
     def buy(self):
         product_id = self.product_id.get()
-        order_time =  datetime.datetime.now().strftime("%Y-%m-%d")
+        order_time = datetime.datetime.now().strftime("%Y-%m-%d")
         order_time = '\'' + order_time + '\''
 
         try:
@@ -159,11 +168,14 @@ class all_product(object):
                            str(product_id))
             total_price = cursor.fetchone()[0]
             cursor.execute(
-            "insert into purchase (user_id, product_id) VALUES (%s,%s) " %(str(self.user_id), str(product_id)))
+                "insert into purchase (user_id, product_id) VALUES (%s,%s) " %
+                (str(self.user_id), str(product_id)))
             cursor.execute(
-            "insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES (%s,%s,%s,'状态：未送达',0001,%s)" %(order_time, str(self.user_id), str(product_id), total_price))
+                "insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES (%s,%s,%s,'状态：未送达',0001,%s)"
+                %
+                (order_time, str(self.user_id), str(product_id), total_price))
             db.commit()
-            messagebox.showinfo(title='恭喜', message='购买成功')  
+            messagebox.showinfo(title='恭喜', message='购买成功')
 
         except Exception as err:
             print(err)
@@ -315,7 +327,6 @@ class all_comment(object):
                 data = cursor.fetchone()
         except Exception as err:
             print(err)
-            
 
     def goback(self):
         self.list.destroy()
