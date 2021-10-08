@@ -13,6 +13,9 @@ def before_run():
         init()
     elif args.e == "reset":
         reset()
+    elif args.e == "help":
+        print("init your database before run, please enter: python main.py init")
+        print("reset your database before run, please enter: python main.py reset")
     else:
         # print("there is no ", args.e)
         pass

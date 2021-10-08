@@ -14,5 +14,4 @@ def reset():
     except Exception as e:
         print('Error: %s' % e)
 
-
     conn.commit()

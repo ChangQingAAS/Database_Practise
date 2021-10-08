@@ -25,7 +25,7 @@ class SignupPage(object):
         # 设置窗口图标
         self.root.iconbitmap("./image/3.ico")
         # 设置窗口宽高固定
-        self.root.resizable(0, 0) 
+        self.root.resizable(0, 0)
 
         self.user_id = StringVar()
         self.passwd = StringVar()
@@ -33,11 +33,11 @@ class SignupPage(object):
         self.nickname = StringVar()
         self.tel_num = StringVar()
         self.gender = StringVar()
+        self.v = IntVar()
         self.birth_date = StringVar()
         self.createPage()
 
     def createPage(self):
-        
 
         self.page = Frame(self.root)  # 创建Frame
         self.page.pack()
@@ -68,9 +68,17 @@ class SignupPage(object):
                                                          stick=E)
 
         Label(self.page, text='性别: ').grid(row=6, stick=W, pady=10)
-        Entry(self.page, textvariable=self.gender).grid(row=6,
-                                                        column=1,
-                                                        stick=E)
+        rbt = Radiobutton(self.page, text='男', variable=self.v,
+                    value='M')
+        rbt.grid(row=6, column=0 ,padx=5 ,columnspan=2)
+        rbt = Radiobutton(self.page, text='女', variable=self.v,
+                    value='F')
+        rbt.grid(row=6, column=1,padx=80 ,columnspan=90)
+        
+
+        # Entry(self.page, textvariable=self.gender).grid(row=6,
+        #                                                 column=1,
+        #                                                 stick=E)
         Label(self.page, text='出生日期: ').grid(row=7, stick=W, pady=10)
         Entry(self.page, textvariable=self.birth_date).grid(row=7,
                                                             column=1,
@@ -89,7 +97,11 @@ class SignupPage(object):
         username = self.username.get()
         nickname = self.nickname.get()
         tel_num = self.tel_num.get()
-        gender = self.gender.get()
+        if self.v == 'M':
+            self.gender = 'M'
+        else:
+            self.gender = 'F'
+        gender = self.gender
         birth_date = self.birth_date.get()
 
         obj_r = SqlSearch()

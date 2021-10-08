@@ -90,8 +90,8 @@ class LoginPage(object):
                 #MainPage(self.root)
 
         if tag == 1:
-            messagebox.showerror('警告', message='用户名或密码错误')
-            showinfo(title='错误', message='账号或密码错误！')
+            messagebox.showerror('错误', message='用户名或密码错误！')
+            # showinfo(title='错误', message='账号或密码错误！')
         else:
             messagebox.showinfo(title='恭喜', message='登陆成功')  # 登陆成功则执行begin函数
             deter = False

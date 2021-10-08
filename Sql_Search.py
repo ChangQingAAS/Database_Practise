@@ -89,6 +89,6 @@ class SqlSearch(object):
                 self.close_conn()
                 return True
             except:
-                #messagebox.showerror('警告', message='用户名已存在')
+                # messagebox.showerror('警告', message='用户名已存在')
                 # 限制提交
                 self.conn.rollback()
