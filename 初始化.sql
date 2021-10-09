@@ -1,5 +1,5 @@
 drop table if exists type_product, product,consumer,address,orders,product_comments,purchase;
-drop  SEQUENCE if exists orders_id_seq;
+-- drop  SEQUENCE if exists orders_id_seq;
 
 -- 创建商品类型表
 CREATE TABLE IF NOT EXISTS  type_product(
@@ -86,6 +86,43 @@ CREATE TABLE IF NOT EXISTS product_comments (
      comment_date       DATE
 ) ;
 
+-- 创建商品评论user_level执行函数
+CREATE OR REPLACE FUNCTION check_level_func()
+returns trigger 
+language plpgsql
+AS $$
+BEGIN
+    update product_comments
+    set user_level = 0
+    where (user_level < 0 or user_level > 5);
+    return new;
+END;
+$$;
+
+-- 创建商品评论user_level触发器
+CREATE TRIGGER check_level
+after insert on product_comments
+for each row
+execute procedure check_level_func();
+
+-- 创建商品评论star执行函数
+CREATE OR REPLACE FUNCTION check_star_func()
+returns trigger 
+language 'plpgsql'
+AS $$
+BEGIN
+    update product_comments
+    set star = 0
+    where (star < 0 or star > 5);
+    return new;
+END;
+$$;
+
+-- 创建商品评论star触发器
+CREATE TRIGGER check_star
+after insert on product_comments
+for each row
+execute procedure check_star_func();
 
 -- 创建购买记录表
 CREATE TABLE IF NOT EXISTS purchase (
@@ -110,8 +147,7 @@ insert into consumer (user_id, passwd, username, nickname, tel_num, gender, birt
 
 -- 添加地址数据 
 insert into address (addr_id, receiver, address_detail, region, country, province, city) VALUES (0001, 001, '海河路250号', '津南区', '中国','天津市','天津市');
- 
- 
+
 -- 添加订单数据
 insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2021-09-18',001,01,'状态：未送达',0001,5000);
 insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2000-09-18',001,02,'状态：未送达',0001,6000);
