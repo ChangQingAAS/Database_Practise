@@ -6,6 +6,7 @@ import login
 import psycopg2
 import etc
 from for_user_id import get_user_id
+from address import *
 
 #连接数据库需要提供相应的数据库名称、用户名、密码、地址、端口等信息
 db = psycopg2.connect(database=etc.database,
@@ -51,27 +52,23 @@ class choose_window(object):
         self.page = Frame(self.root)
         self.page.pack()
         # 按键设置
-        Button(self.page, text='商品列表', command=self.product,bg='AliceBlue').grid(row=9,
-                                                                  column=5,
-                                                                  stick=E)
-        Button(self.page, text='我的订单', command=self.orders,bg='AliceBlue').grid(row=10,
-                                                                 column=5,
-                                                                 stick=E)
-        Button(self.page, text='我的地址', command=self.address,bg='AliceBlue').grid(row=11,
-                                                                  column=5,
-                                                                  stick=E)
-        Button(self.page, text='商品评论', command=self.comment,bg='AliceBlue').grid(row=12,
-                                                                  column=5 
-                                                                   )
+        Button(self.page, text='商品列表', command=self.product,
+               bg='AliceBlue').grid(row=9, column=5, stick=E)
+        Button(self.page, text='我的订单', command=self.orders,
+               bg='AliceBlue').grid(row=10, column=5, stick=E)
+        Button(self.page, text='我的地址', command=self.address,
+               bg='AliceBlue').grid(row=11, column=5, stick=E)
+        Button(self.page, text='商品评论', command=self.comment,
+               bg='AliceBlue').grid(row=12, column=5)
         self.back = tkinter.Button(width=5,
-                              height=1,
-                              text='后退',
-                              padx=1,
-                              pady=1,
-                              anchor='w',
-                              background='AliceBlue',
-                              command=self.goback)
-        self.back.place(x=650-40, y=400-15, anchor='w')
+                                   height=1,
+                                   text='后退',
+                                   padx=1,
+                                   pady=1,
+                                   anchor='w',
+                                   background='AliceBlue',
+                                   command=self.goback)
+        self.back.place(x=650 - 40, y=400 - 15, anchor='w')
 
     def product(self):
         self.back.destroy()
@@ -254,13 +251,21 @@ class all_address(object):
         self.root.iconbitmap("./image/3.ico")
         # 设置窗口宽高固定
         self.root.resizable(0, 0)
+
+        self.address = StringVar()
+
         self.createPage()
 
     def createPage(self):
+        self.page = Frame(self.root)  # 创建Frame
+        self.page.pack()
+
         self.list = Listbox(self.root)
         self.list.pack(fill=BOTH, expand=1, padx=10, pady=10)
-        self.button = Button(self.root, text='返回', command=self.goback)
-        self.button.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
+        self.button1 = Button(self.root, text='返回', command=self.goback,bg='AliceBlue')
+        self.button1.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
+        self.button2 = Button(self.root, text='创建地址', command=self.create_new_addr,bg='AliceBlue')
+        self.button2.pack(side=LEFT, padx=(0, 20), pady=(0, 20))
         string = ' | 具体地址  |  区  |  国家  |  省  |  市'
         self.list.insert("end", string)
 
@@ -281,8 +286,16 @@ class all_address(object):
 
     def goback(self):
         self.list.destroy()
-        self.button.destroy()
+        self.button1.destroy()
+        self.button2.destroy()
         choose_window(self.root)
+
+    def create_new_addr(self):
+        self.list.destroy()
+        self.button1.destroy()
+        self.button2.destroy()
+        self.page.destroy()
+        Address(self.root)
 
 
 class all_comment(object):

@@ -41,13 +41,14 @@ CREATE TABLE IF NOT EXISTS  consumer (
 
 -- 创建地址表
 CREATE TABLE IF NOT EXISTS address (
-     addr_id            BIGINT  PRIMARY KEY,
-     receiver           INT REFERENCES consumer(user_id),
-     address_detail     VARCHAR(100),
-     region             VARCHAR(20),
-     country            VARCHAR(20),
-     province           VARCHAR(20),
-     city               VARCHAR(20)
+     addr_id            serial,
+     receiver           int REFERENCES consumer(user_id),
+     address_detail     varchar(100),
+     region             varchar(20),
+     country            varchar(20),
+     province           varchar(20),
+     city               varchar(20),
+	PRIMARY KEY(addr_id)
 ) ;
 
 -- 创建订单表
@@ -146,11 +147,11 @@ insert into consumer (user_id, passwd, username, nickname, tel_num, gender, birt
 insert into consumer (user_id, passwd, username, nickname, tel_num, gender, birth_date, last_login) VALUES (002,'changqingaas','changqingaas','JiaRan','110','F','2010-05-30','2021-09-30');
 
 -- 添加地址数据 
-insert into address (addr_id, receiver, address_detail, region, country, province, city) VALUES (0001, 001, '海河路250号', '津南区', '中国','天津市','天津市');
+insert into address (receiver, address_detail, region, country, province, city) VALUES ( 001, '海河路250号', '津南区', '中国','天津市','天津市');
 
 -- 添加订单数据
 insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2021-09-18',001,01,'状态：未送达',0001,5000);
-insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2000-09-18',001,02,'状态：未送达',0001,6000);
+insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2000-09-18',002,02,'状态：未送达',0001,6000);
 
 
 -- 创建商品评论数据
@@ -159,4 +160,4 @@ insert into product_comments (release_user, contents, user_level, like_num, repl
 
 -- 创建购买记录 
 insert into purchase(user_id, product_id) VALUES (001,01);
-insert into purchase(user_id, product_id) VALUES (001,02);
+insert into purchase(user_id, product_id) VALUES (002,02);
