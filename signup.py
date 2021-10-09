@@ -7,6 +7,7 @@ import psycopg2
 import etc
 from Sql_Search import SqlSearch
 import page1
+from date import Date
 
 
 class SignupPage(object):
@@ -75,14 +76,9 @@ class SignupPage(object):
                     value='F')
         rbt.grid(row=6, column=1,padx=80 ,columnspan=90)
         
-
-        # Entry(self.page, textvariable=self.gender).grid(row=6,
-        #                                                 column=1,
-        #                                                 stick=E)
-        Label(self.page, text='出生日期: ').grid(row=7, stick=W, pady=10)
-        Entry(self.page, textvariable=self.birth_date).grid(row=7,
-                                                            column=1,
-                                                            stick=E)
+        # Label(self.page, text='出生日期: ').grid(row=7, stick=W, pady=10) 
+        Button(self.page, text='出生日期：', command=lambda: self.getdate('start')).grid(row=7,stick=W,pady=10)
+        Entry(self.page, textvariable=self.birth_date).grid(row=7, column=1)
 
         Button(self.page, text='注册', command=self.signupCheck).grid(row=8,
                                                                     stick=W,
@@ -90,6 +86,11 @@ class SignupPage(object):
         Button(self.page, text='退出', command=self.page.quit).grid(row=8,
                                                                   column=1,
                                                                   stick=E)
+    def getdate(self, type):  #获取选择的日期
+        for date in [Date().selection()]:
+            if date:
+                if (type == 'start'):  #如果是开始按钮，就赋值给开始日期
+                    self.birth_date.set(date) 
 
     def signupCheck(self):
         user_id = self.user_id.get()

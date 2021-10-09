@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS product_comments (
      comment_date       DATE
 ) ;
 
+
 -- 创建购买记录表
 CREATE TABLE IF NOT EXISTS purchase (
      user_id       BIGINT  REFERENCES consumer(user_id),
