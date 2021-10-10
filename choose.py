@@ -7,6 +7,7 @@ import psycopg2
 import etc
 from for_user_id import get_user_id
 from address import *
+from comment import *
 
 #连接数据库需要提供相应的数据库名称、用户名、密码、地址、端口等信息
 db = psycopg2.connect(database=etc.database,
@@ -127,13 +128,39 @@ class all_product(object):
     def createPage(self):
         self.page = Frame(self.root)  # 创建Frame
         self.page.pack()
-        Label(self.page, text='购买商品: ').grid(row=1, stick=W, pady=10)
-        Entry(self.page, textvariable=self.product_id).grid(row=1,
-                                                            column=1,
-                                                            stick=E)
-        Button(self.page, text='确定', command=self.buy).grid(row=1, column=5)
 
-        self.button = Button(self.root, text='返回', command=self.goback)
+        try:
+            values = []
+            cursor.execute(
+                "select product_id from product"
+            )
+            data = cursor.fetchone()
+            while data != None:
+                values.append(str(data[0]))
+                data = cursor.fetchone()
+        except Exception as err:
+            print(err)
+        
+        Label(self.page, text='购买商品: ').grid(row=1, stick=W, pady=10)
+        self.product_id.set('1')   
+        self.combobox = ttk.Combobox(
+            master=self.page,  # 父容器
+            height=4,  # 高度,下拉显示的条目数量
+            width=8,  # 宽度
+            state='normal',  # 设置状态 normal(可选可输入)、readonly(只可选)、 disabled
+            cursor='arrow',  # 鼠标移动时样式 arrow, circle, cross, plus...
+            font=('', 14),  # 字体
+            textvariable=self.product_id,  # 通过StringVar设置可改变的值
+            values=values,  # 设置下拉框的选项
+        )
+        self.combobox.grid(row=1, column=1, stick=W )
+        Button(self.page, text='确定', command=self.buy,
+               bg='AliceBlue').grid(row=1, column=5)
+
+        self.button = Button(self.root,
+                             text='返回',
+                             command=self.goback,
+                             bg='AliceBlue')
         self.button.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
         self.list = Listbox(self.root)
         self.list.pack(fill=BOTH, expand=1, padx=10, pady=10)
@@ -207,7 +234,7 @@ class all_orders(object):
     def createPage(self):
         self.list = Listbox(self.root)
         self.list.pack(fill=BOTH, expand=1, padx=10, pady=10)
-        self.button = Button(self.root, text='返回', command=self.goback)
+        self.button = Button(self.root, text='返回', command=self.goback,  bg='AliceBlue')
         self.button.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
         string = ' | 订单编号  | 购买时间 | 商品id | 物流状态 | 价格'
         self.list.insert("end", string)
@@ -262,10 +289,16 @@ class all_address(object):
 
         self.list = Listbox(self.root)
         self.list.pack(fill=BOTH, expand=1, padx=10, pady=10)
-        self.button1 = Button(self.root, text='返回', command=self.goback,bg='AliceBlue')
+        self.button1 = Button(self.root,
+                              text='返回',
+                              command=self.goback,
+                              bg='AliceBlue')
         self.button1.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
-        self.button2 = Button(self.root, text='创建地址', command=self.create_new_addr,bg='AliceBlue')
-        self.button2.pack(side=LEFT, padx=(0, 20), pady=(0, 20))
+        self.button2 = Button(self.root,
+                              text='添加地址',
+                              command=self.create_new_addr,
+                              bg='AliceBlue')
+        self.button2.pack(side=LEFT, padx=(20, 40), pady=(0, 20))
         string = ' | 具体地址  |  区  |  国家  |  省  |  市'
         self.list.insert("end", string)
 
@@ -318,11 +351,22 @@ class all_comment(object):
         self.createPage()
 
     def createPage(self):
+        self.page = Frame(self.root)  # 创建Frame
+        self.page.pack()
+
         self.list = Listbox(self.root)
         self.list.pack(fill=BOTH, expand=1, padx=10, pady=10)
 
-        self.button = Button(self.root, text='返回', command=self.goback)
-        self.button.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
+        self.button1 = Button(self.root,
+                              text='返回',
+                              command=self.goback,
+                              bg='AliceBlue')
+        self.button1.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
+        self.button2 = Button(self.root,
+                              text='添加评论',
+                              command=self.create_new_comment,
+                              bg='AliceBlue')
+        self.button2.pack(side=LEFT, padx=(20, 40), pady=(0, 20))
         string = " | 用户编号 | 用户评论 | 用户等级 | 评论点赞数 | 商品打分 | 评论日期 "
         self.list.insert("end", string)
 
@@ -343,5 +387,13 @@ class all_comment(object):
 
     def goback(self):
         self.list.destroy()
-        self.button.destroy()
+        self.button1.destroy()
+        self.button2.destroy()
         choose_window(self.root)
+
+    def create_new_comment(self):
+        self.list.destroy()
+        self.button1.destroy()
+        self.button2.destroy()
+        self.page.destroy()
+        Comment(self.root)

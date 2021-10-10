@@ -93,7 +93,6 @@ class Address(object):
             string = "insert into address (receiver, address_detail, region, country, province,city) VALUES (%s,'%s','%s','%s', '%s', '%s')" % (
                 str(user_id), str(address_detail), str(region), str(country),
                 str(province), str(city))
-            print(string)
             cursor.execute(string)
             db.commit()
             messagebox.showinfo(title='success!', message='添加成功')

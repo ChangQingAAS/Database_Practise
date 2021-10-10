@@ -205,7 +205,7 @@ def update_db(u_sql):
         conn.close()
         return "ok"
 
-#登陆时检查用户是否存在的函数
+#登录时检查用户是否存在的函数
 def logincheck(table,nickname,passwd):
     conn=connect_db()
     cursor=conn.cursor()

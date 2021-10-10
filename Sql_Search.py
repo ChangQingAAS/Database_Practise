@@ -77,7 +77,7 @@ class SqlSearch(object):
             try:
                 # 获取登录时间，即为当前时间
                 self.last_login = datetime.datetime.now().strftime('%Y-%m-%d')
-                # sql = 'INSERT INTO 登陆账户(用户名,密码) VALUES(%s,%s)'
+                # sql = 'INSERT INTO 登录账户(用户名,密码) VALUES(%s,%s)'
                 self.cursor.execute(
                     'insert into consumer (user_id, passwd, username, nickname, tel_num, gender, birth_date, last_login) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)',
                     (self.user_id, self.passwd, self.username, self.nickname,
