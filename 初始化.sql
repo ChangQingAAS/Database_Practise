@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS  product(
 	 product_id  BIGINT ,
 	 product_name  VARCHAR(100) NOT NULL,
 	 type_id  int,
-	 price  int,
+	 price  DECIMAL(7,2),
 	 sales  int,
 	 launch_time  DATE,
 	 out_time  DATE,
-	 details  varchar(100),
+	 details  varchar(500),
 	 shop_name  varchar(100),
      PRIMARY KEY (product_id ),
   	CONSTRAINT fk_pro_type FOREIGN KEY(type_id) REFERENCES type_product(type_id)
@@ -133,14 +133,21 @@ CREATE TABLE IF NOT EXISTS purchase (
 
 -- 添加商品类型
 insert into type_product (type_id, type_name) VALUES (1,'电子设备');
-insert into type_product (type_id, type_name) VALUES (2,'电子设备');
-insert into type_product (type_id, type_name) VALUES (3,'日用百货');
+insert into type_product (type_id, type_name) VALUES (2,'日用百货');
+insert into type_product (type_id, type_name) VALUES (3,'文具');
+insert into type_product (type_id, type_name) VALUES (4,'书籍');
+
+
 
 
 -- 添加商品数据
-insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (01,'iPhone 12', 1, 5000,500,'2021-10-30','2031-10-30','一部手机','苹果手机店');
-insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (02,'OPPO reno 6', 1, 6000,600,'2021-05-30','2031-06-30','一部手机','OPPO手机店');
-insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (03,'蓝月亮洗衣液', 1, 30,60000,'2005-05-30','2041-06-30','洗衣液','蓝月亮官网');
+insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (01,'iPhone 12', 1, 5000.0,500,'2021-10-30','2031-10-30','一部手机','苹果手机店');
+insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (02,'OPPO reno 6', 1, 6000.0,600,'2021-05-30','2031-06-30','一部手机','OPPO手机店');
+insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (03,'蓝月亮洗衣液', 2, 30.00,56787,'2013-05-30','2041-06-30','洗衣液','蓝月亮官网');
+insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (04,'乐扣水杯', 2, 30.0,60858,'2007-07-27','2071-07-12','新款运动塑料水杯学生杯便携随手带杯子两件套','乐扣乐扣京东自营旗舰店');
+insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (05,'晨光水笔替芯', 3, 16.8,4274,'2004-05-30','2031-04-24','
+晨光(M&G) 中性替芯水笔芯 黑 0.7mm学生办公文具 黑色 20支/盒','晨光文具京东自营');
+insert into product (product_id, product_name, type_id, price, sales, launch_time, out_time,details, shop_name) VALUES (06,'高等数学同济第七版', 1, 68.8,214,'2005-05-30','2022-06-30','高等数学上下册：教材+习题全解指南','高等教育出版社');
 
 -- 创建顾客数据
 insert into consumer (user_id, passwd, username, nickname, tel_num, gender, birth_date, last_login) VALUES (001,'why','why','giao','15222168550','M','2004-05-30','2021-09-30');

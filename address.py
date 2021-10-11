@@ -75,8 +75,8 @@ class Address(object):
                                     columnspan=80)
 
     def Back(self):
-        country =    self.country.get()  
-        province =  self.province.get() 
+        country =  self.country.get()  
+        province = self.province.get() 
         city =  self.city.get()
         region =  self.region.get() 
         address_detail =  self.address_detail.get() 

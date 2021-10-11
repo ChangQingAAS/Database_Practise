@@ -299,12 +299,12 @@ class all_address(object):
                               command=self.create_new_addr,
                               bg='AliceBlue')
         self.button2.pack(side=LEFT, padx=(20, 40), pady=(0, 20))
-        string = ' | 具体地址  |  区  |  国家  |  省  |  市'
+        string = ' | 地址编号 | 具体地址  |  区  |  国家  |  省  |  市'
         self.list.insert("end", string)
 
         try:
             cursor.execute(
-                "SELECT address_detail,region,country, province,city  FROM address where receiver =  %s",
+                "SELECT addr_id,  address_detail,region,country, province,city  FROM address where receiver =  %s",
                 str(self.user_id))
             data = cursor.fetchone()
 
