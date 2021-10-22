@@ -131,18 +131,16 @@ class all_product(object):
 
         try:
             values = []
-            cursor.execute(
-                "select product_id from product"
-            )
+            cursor.execute("select product_id from product")
             data = cursor.fetchone()
             while data != None:
                 values.append(str(data[0]))
                 data = cursor.fetchone()
         except Exception as err:
             print(err)
-        
+
         Label(self.page, text='购买商品: ').grid(row=1, stick=W, pady=10)
-        self.product_id.set('1')   
+        self.product_id.set('1')
         self.combobox = ttk.Combobox(
             master=self.page,  # 父容器
             height=4,  # 高度,下拉显示的条目数量
@@ -153,7 +151,7 @@ class all_product(object):
             textvariable=self.product_id,  # 通过StringVar设置可改变的值
             values=values,  # 设置下拉框的选项
         )
-        self.combobox.grid(row=1, column=1, stick=W )
+        self.combobox.grid(row=1, column=1, stick=W)
         Button(self.page, text='确定', command=self.buy,
                bg='AliceBlue').grid(row=1, column=5)
 
@@ -168,6 +166,7 @@ class all_product(object):
         self.list.insert("end", string)
 
         try:
+
             cursor.execute(
                 "select product_id, product_name, type_name, price,sales, details, shop_name from product,type_product where product.type_id = type_product.type_id order by product_id "
             )
@@ -188,8 +187,9 @@ class all_product(object):
         order_time = '\'' + order_time + '\''
 
         try:
-            cursor.execute("select price from product where product_id = %s",
-                           str(product_id))
+            string = "select price from product where product_id = %s" % str(
+                product_id)
+            cursor.execute(string)
             total_price = cursor.fetchone()[0]
             cursor.execute(
                 "insert into purchase (user_id, product_id) VALUES (%s,%s) " %
@@ -234,15 +234,18 @@ class all_orders(object):
     def createPage(self):
         self.list = Listbox(self.root)
         self.list.pack(fill=BOTH, expand=1, padx=10, pady=10)
-        self.button = Button(self.root, text='返回', command=self.goback,  bg='AliceBlue')
+        self.button = Button(self.root,
+                             text='返回',
+                             command=self.goback,
+                             bg='AliceBlue')
         self.button.pack(side=RIGHT, padx=(0, 20), pady=(0, 20))
         string = ' | 订单编号  | 购买时间 | 商品id | 物流状态 | 价格'
         self.list.insert("end", string)
 
         try:
-            cursor.execute(
-                "SELECT order_no,order_time,product_id,status,total_price from orders where user_id =  %s order by order_time",
-                str(self.user_id))
+            string = "SELECT order_no,order_time,product_id,status,total_price from orders where user_id = %s order by order_time" % str(
+                self.user_id)
+            cursor.execute(string)
             data = cursor.fetchone()
 
             while data != None:
@@ -303,9 +306,9 @@ class all_address(object):
         self.list.insert("end", string)
 
         try:
-            cursor.execute(
-                "SELECT addr_id,  address_detail,region,country, province,city  FROM address where receiver =  %s",
-                str(self.user_id))
+            string = "SELECT addr_id, address_detail,region,country, province,city  FROM address where receiver =  %s" % str(
+                self.user_id)
+            cursor.execute(string)
             data = cursor.fetchone()
 
             while data != None:
@@ -367,12 +370,12 @@ class all_comment(object):
                               command=self.create_new_comment,
                               bg='AliceBlue')
         self.button2.pack(side=LEFT, padx=(20, 40), pady=(0, 20))
-        string = " | 用户编号 | 用户评论 | 用户等级 | 评论点赞数 | 商品打分 | 评论日期 "
+        string = " | 用户编号 | 商品编号 | 用户评论 | 用户等级 | 评论点赞数 | 商品打分 | 评论日期 "
         self.list.insert("end", string)
 
         try:
             cursor.execute(
-                "select release_user, contents,user_level,like_num, star, comment_date from product_comments order by  comment_date"
+                "select release_user, product_id, contents,user_level,like_num, star, comment_date from product_comments order by comment_date"
             )
             data = cursor.fetchone()
 

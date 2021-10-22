@@ -34,6 +34,7 @@ class Comment(object):
 
         self.contents = StringVar()
         self.star = StringVar()
+        self.product_id = StringVar()
 
         self.createPage()
 
@@ -46,8 +47,7 @@ class Comment(object):
         Label(self.page, text='评论内容: ').grid(row=1, stick=W, pady=10)
         Entry(self.page, textvariable=self.contents).grid(row=1,
                                                           column=1,
-                                                          stick=W
-                                                            )
+                                                          stick=W)
 
         Label(self.page, text='商品打分: ').grid(row=3, stick=W, pady=10)
         self.star.set('5')  # 默认选中CCC==combobox.current(2)
@@ -62,17 +62,19 @@ class Comment(object):
             textvariable=self.star,  # 通过StringVar设置可改变的值
             values=values,  # 设置下拉框的选项
         )
-        self.combobox.grid(row=3, column=1, stick=W )
+        self.combobox.grid(row=3, column=1, stick=W)
+
+        Label(self.page, text='评论商品(id): ').grid(row=4, stick=W, pady=10)
+        Entry(self.page, textvariable=self.product_id).grid(row=4,
+                                                            column=1,
+                                                            stick=W)
 
         Button(self.page, text='确认', command=self.Back,
-               bg='AliceBlue').grid(row=10,
-                                    column=1,
-                                    stick=W,
-                                    columnspan=40
-                                      )
+               bg='AliceBlue').grid(row=10, column=1, stick=W, columnspan=40)
 
     def Back(self):
         user_id = get_user_id()
+        product_id = self.product_id.get()
         contents = self.contents.get()
         user_level = 0
         like_num = 0
@@ -88,9 +90,9 @@ class Comment(object):
                                   host=etc.host,
                                   port=etc.port)
             cursor = db.cursor()
-            string = "insert into product_comments (release_user, contents, user_level, like_num, reply_num,star,comment_date) VALUES (%s,'%s',%s,%s, %s, %s,'%s')" % (
-                user_id, contents, user_level, like_num, reply_num, star,
-                comment_date)
+            string = "insert into product_comments (release_user, product_id, contents, user_level, like_num, reply_num,star,comment_date) VALUES (%s,%s,'%s',%s,%s, %s, %s,'%s')" % (
+                user_id, product_id, contents, user_level, like_num, reply_num,
+                star, comment_date)
             cursor.execute(string)
             db.commit()
             messagebox.showinfo(title='success!', message='添加成功')
