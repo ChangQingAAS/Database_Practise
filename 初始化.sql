@@ -1,8 +1,12 @@
+----------------------------------------------------
+-- 初始化，先把表情况
+drop table if exists sell,favorite,subscribe,coupon,trolley,merchant;
 drop table if exists recommend,type_product, product,consumer,address,orders,product_comments,purchase,courier,delivery;
 -- drop  SEQUENCE if exists orders_id_seq;
+----------------------------------------------------
 
--- TODO: 建表
-
+----------------------------------------------------
+-- 建表
 -- 创建商品类型表
 CREATE TABLE IF NOT EXISTS  type_product(
 	 type_id  BIGINT,
@@ -49,6 +53,15 @@ CREATE TABLE IF NOT EXISTS courier (
     PRIMARY KEY ( courier_id )
 );
 
+-- 创建卖家店铺表
+CREATE TABLE IF NOT EXISTS merchant (
+    merchant_id     BIGINT,
+    merchant_level  BIGINT,
+    location        VARCHAR(100),
+    evaluation      BIGINT,
+    PRIMARY KEY ( merchant_id )
+);
+
 -- 创建地址表
 CREATE TABLE IF NOT EXISTS address (
      addr_id            serial  PRIMARY KEY,
@@ -88,19 +101,26 @@ CREATE TABLE IF NOT EXISTS  orders (
 -- 创建商品评论表
 CREATE TABLE IF NOT EXISTS product_comments (
      release_user       BIGINT  REFERENCES consumer(user_id),
-	 product_id        BIGINT  REFERENCES product(product_id),
      contents           VARCHAR(100),
      user_level         INT,
      like_num           INT,
      reply_num          INT,
      star               INT,
-     comment_date       DATE
+     comment_date       DATE,
+     product_id         BIGINT
 ) ;
 
 -- 创建购买记录表
 CREATE TABLE IF NOT EXISTS purchase (
-     user_id       BIGINT  REFERENCES consumer(user_id),
-     product_id    BIGINT REFERENCES  product(product_id)
+     user_id            BIGINT REFERENCES consumer(user_id),
+     product_id         BIGINT REFERENCES  product(product_id)
+) ;
+
+-- 创建购物车记录表
+CREATE TABLE IF NOT EXISTS trolley (
+     consumer_id        BIGINT REFERENCES consumer(user_id),
+     want_item          BIGINT REFERENCES product(product_id),
+     sum                BIGINT
 ) ;
 
 -- 创建发送货物记录表
@@ -113,12 +133,42 @@ CREATE TABLE IF NOT EXISTS delivery (
     arrival_time        DATE
 ) ;
 
-CREATE TABLE IF NOT EXISTS recommend (
-	user_id BIGINT REFERENCES consumer(user_id),
-	product_id BIGINT REFERENCES product(product_id)
-);
+-- 创建售卖商品列表
+CREATE TABLE IF NOT EXISTS sell (
+	seller              BIGINT REFERENCES merchant(merchant_id),
+    purchaser           BIGINT REFERENCES consumer(user_id),
+    sell_product        BIGINT REFERENCES product(product_id)
+) ;
 
--- TODO: 创建执行函数
+-- 创建推荐表
+CREATE TABLE IF NOT EXISTS recommend (
+	user_id             BIGINT REFERENCES consumer(user_id),
+	product_id          BIGINT REFERENCES product(product_id)
+) ;
+
+-- 创建收藏夹列表
+CREATE TABLE IF NOT EXISTS favorite (
+	user_id             BIGINT REFERENCES consumer(user_id),
+	favorite_product    BIGINT REFERENCES product(product_id)
+) ;
+
+-- 创建订阅列表
+CREATE TABLE IF NOT EXISTS subscribe (
+	user_id             BIGINT REFERENCES consumer(user_id),
+	subscribe_merchant  BIGINT REFERENCES merchant(merchant_id)
+) ;
+
+-- 创建优惠券列表
+CREATE TABLE IF NOT EXISTS coupon (
+	user_id             BIGINT REFERENCES consumer(user_id),
+	discount            DECIMAL(3,2),
+    deadline            DATE
+) ;
+----------------------------------------------------
+
+
+----------------------------------------------------
+-- 创建执行函数
 
 -- 创建商品product_id执行函数
 CREATE OR REPLACE FUNCTION product_id_func()
@@ -380,7 +430,33 @@ BEGIN
 END;
 $$;
 
--- TODO: 创建触发器
+-- 创建推荐列表recommend_from_orders的函数
+CREATE OR REPLACE FUNCTION recomend_from_orders_func()
+returns trigger
+language 'plpgsql'
+AS $$
+begin
+	insert into recommend VALUES(new.user_id, new.product_id);
+	return NULL;
+end;
+$$;
+
+-- 创建推荐列表recommend_from_product_comments的函数
+CREATE OR REPLACE FUNCTION recomend_from_product_comments_func()
+returns trigger
+language 'plpgsql'
+AS $$
+begin
+	if new.star >= 4 then
+		insert into recommend VALUES(new.release_user, new.product_id);
+	end if;
+	return NULL;
+end;
+$$;
+----------------------------------------------------
+
+----------------------------------------------------
+-- 创建触发器
 
 -- 创建商品product_id触发器
 CREATE TRIGGER check_product_insert_id
@@ -562,41 +638,21 @@ after insert on delivery
 for each row
 execute procedure delivery_arrivaltime_func();
 
--- 创建推荐列表recommend_from_orders的函数
-CREATE OR REPLACE FUNCTION recomend_from_orders_func()
-returns trigger
-language 'plpgsql'
-AS $$
-begin
-	insert into recommend VALUES(new.user_id, new.product_id);
-	return NULL;
-end;
-$$;
-
 -- 创建推荐列表recommend_from_orders触发器
 CREATE TRIGGER recomend_from_orders
 after insert on orders
 for each row
 execute procedure recomend_from_orders_func();
 
--- 创建推荐列表recommend_from_product_comments的函数
-CREATE OR REPLACE FUNCTION recomend_from_product_comments_func()
-returns trigger
-language 'plpgsql'
-AS $$
-begin
-	if new.star >= 4 then
-		insert into recommend VALUES(new.release_user, new.product_id);
-	end if;
-	return NULL;
-end;
-$$;
-
 -- 创建推荐列表recommend_from_product_comments触发器
 CREATE TRIGGER recomend_from_product_comments
 after insert on product_comments
 for each row
 execute procedure recomend_from_product_comments_func();
+----------------------------------------------------
+
+----------------------------------------------------
+-- 数据库操作：增删改查
 
 -- 添加商品类型
 insert into type_product (type_id, type_name) VALUES (1,'电子设备');
@@ -624,11 +680,10 @@ insert into address (receiver, address_detail, region, country, province, city) 
 insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2021-09-18',001,01,'状态：未送达',0001,5000);
 insert into orders (order_time, user_id, product_id, status, addr_id, total_price) VALUES ('2000-09-18',002,02,'状态：未送达',0001,6000);
 
-
 -- 创建商品评论数据
-insert into product_comments (release_user, product_id, contents, user_level, like_num, reply_num, star, comment_date) VALUES (001,01,'good',87,77,2,5,'2021-09-08');
-
+insert into product_comments (release_user, contents, user_level, like_num, reply_num, star, comment_date) VALUES (001,'good',87,77,2,5,'2021-09-08');
 
 -- 创建购买记录 
 insert into purchase(user_id, product_id) VALUES (001,01);
 insert into purchase(user_id, product_id) VALUES (002,02);
+----------------------------------------------------
