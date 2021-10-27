@@ -1,5 +1,5 @@
 ----------------------------------------------------
--- 初始化，先把表情况
+-- 初始化，先把表清空
 drop table if exists sell,favorite,subscribe,coupon,trolley,merchant;
 drop table if exists recommend,type_product, product,consumer,address,orders,product_comments,purchase,courier,delivery;
 -- drop  SEQUENCE if exists orders_id_seq;
