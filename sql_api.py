@@ -7,8 +7,8 @@ def connect_db():
         'host': 'localhost',
         'port': 3306,
         'user': 'root',
-        'passwd': 'Xmj987536',
-        'db': 'userprogram',
+        'passwd': 'root',
+        'db': 'JD_System',
         'charset': 'utf8mb4'
         }
     # 打开数据库连接
